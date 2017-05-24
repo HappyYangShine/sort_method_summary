@@ -1,6 +1,8 @@
 #ifndef SORT_H_INCLUDED
 #define SORT_H_INCLUDED
 
+#include <utility>
+
 //
 template <typename T>
 void SelectionSort(T A[], int n)
@@ -84,7 +86,7 @@ void Swap(T &A, T &B)
 
 //
 template <typename T>
-void QuickSort(T A[], int low, int high)
+void QuickSort_2(T A[], int low, int high)
 {
     T pivot;
     int scanUp, scanDown;
@@ -128,5 +130,45 @@ void QuickSort(T A[], int low, int high)
         QuickSort(A, scanDown + 1, high);
 }
 
+
+// 很简单的快速排序
+
+// 返回主元（枢轴，pivot）下标，主元左边数组小于主元，主元右边数据大于主元
+// low，high为最小最大下标
+template <typename T>
+int Partition(T A[], int low, int high)
+{
+    // 将数组的最后一个元素作为主元，来划分数组
+    T pivot = A[high];
+    // i是数组中最后一个小于主元的元素的下标
+    int i = low - 1;
+    // 遍历下标由low到high-1的元素
+    for(int j = low; j < high; ++j)
+    {
+        // 如果A[j]小于主元，就将i向前移动一个位置，并交换i，j的元素
+        if (A[j] < pivot)
+        {
+            ++i;
+            std::swap(A[i], A[j]);
+        }
+    }
+    // 经过以上循环之后，从下标low到i（包括i）的元素都小于主元，交换i+1和主元
+    std::swap(A[i + 1], A[high]);
+
+    return  i + 1;
+}
+
+// 快速排序， low，high为数据最小，最大下标
+template <typename T>
+void QuickSort(T A[], int low, int high)
+{
+    if (low < high)
+    {
+        int pivot_pos = Partition(A, low, high);
+        QuickSort(A, low, pivot_pos - 1);
+        QuickSort(A, pivot_pos + 1, high);
+    }
+
+}
 
 #endif // SORT_H_INCLUDED
