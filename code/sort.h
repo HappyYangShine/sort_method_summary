@@ -84,8 +84,7 @@ void Swap(T &A, T &B)
 
 }
 
-//
-template <typename T>
+//template <typename T>
 void QuickSort_2(T A[], int low, int high)
 {
     T pivot;
@@ -171,4 +170,41 @@ void QuickSort(T A[], int low, int high)
 
 }
 
+
+
+template <typename T>
+void QuickSort_3(T A[], int low, int high)
+{
+    if (low < high)
+    {
+        int up = low;
+        int down = high;
+        int middle = (up + down) / 2;
+        std::swap(A[up], A[middle]);
+        T pivot = A[up];
+
+        while (up < down)
+        {
+            while (up < down && A[down] >= pivot)
+            {
+                --down;
+            }
+            if (up < down)
+            {
+                A[up++] = A[down];
+            }
+            while (up < down && A[up] <= pivot)
+            {
+                ++up;
+            }
+            if (up < down)
+            {
+                A[down--] = A[up];
+            }
+        }
+        A[up] = pivot;
+        QuickSort(A, low, up - 1);
+        QuickSort(A, up + 1, high);
+    }
+}
 #endif // SORT_H_INCLUDED
