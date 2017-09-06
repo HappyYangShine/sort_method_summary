@@ -207,4 +207,148 @@ void QuickSort_3(T A[], int low, int high)
         QuickSort(A, up + 1, high);
     }
 }
+
+
+
+/// merge sort
+
+template <typename T>
+void MergeArray(T A[], int left, int middle, int right, T temp[])
+{
+    int i = left;
+    int j = middle + 1;
+    int k = left;
+
+    while (i <= middle && j <= right)
+    {
+        if (A[i] <= A[j])
+        {
+            temp[k++] = A[i++];
+        }
+        else
+        {
+            temp[k++] = A[j++];
+        }
+    }
+    while (i <= middle)
+    {
+        temp[k++] = A[i++];
+    }
+    while (j <= right)
+    {
+        temp[k++] = A[j++];
+    }
+    for (int k = left; k <= right; ++k)
+    {
+        A[k] = temp[k];
+    }
+}
+
+template <typename T>
+void MergeSort(T A[], int left, int right, T temp[])
+{
+    if (left < right)
+    {
+        int middle = (right - left) / 2 + left;
+        MergeSort(A, left, middle, temp);
+        MergeSort(A, middle + 1, right, temp);
+        MergeArray(A, left, middle, right, temp);
+    }
+}
+
+template <typename T>
+void MergeSort(T A[], int n)
+{
+    T *p = new T[n];
+    MergeSort(A, 0, n - 1, p);
+    delete [] p;
+}
+
+
+/// heap sort, minimum heap
+template <typename T>
+void FilterUp(T arr[], int i, int heap_size)
+{
+    int cur = i;
+    int parent = (i - 1) / 2;
+    T target = arr[i];
+    while (cur >= 0)
+    {
+        if (arr[parent] < arr[cur])
+        {
+            break;
+        }
+        else
+        {
+            arr[cur] = arr[parent];
+            cur = parent;
+            parent = (cur - 1) / 2;
+        }
+    }
+    arr[cur] = target;
+}
+
+template <typename T>
+void FilterDown(T arr[], int i, int heap_size)
+{
+    int cur = i;
+    int child = 2 * i + 1;
+    T target = arr[i];
+    while (child < heap_size)
+    {
+        if (child + 1 < heap_size && arr[child + 1] < arr[child])
+        {
+            child = child + 1;
+        }
+        if (target < arr[child])
+        {
+            break;
+        }
+        else
+        {
+            arr[cur] = arr[child];
+            cur = child;
+            child = cur * 2 + 1;
+        }
+    }
+    arr[cur] = target;
+}
+
+template <typename T>
+void Delete(T arr[], int &heap_size)
+{
+    if (heap_size == 0)
+    {
+        std::cerr << "empty heap" << endl;
+    }
+    std::swap(arr[0], arr[heap_size - 1]);
+    --heap_size;
+    FilterDown(arr, 0, heap_size);
+}
+
+
+template <typename T>
+void MakeHeap(T arr[], int n)
+{
+    int heap_size = n;
+    int cur = (heap_size - 2) / 2;
+    while (cur >= 0)
+    {
+        FilterDown(arr, cur, heap_size);
+        --cur;
+    }
+}
+
+
+template <typename T>
+void HeapSort(T arr[], int n)
+{
+    int heap_size = n;
+    MakeHeap(arr, n);
+    for (int i = 1; i <= n - 1; ++i)
+    {
+        Delete(arr,heap_size);
+    }
+}
+
 #endif // SORT_H_INCLUDED
